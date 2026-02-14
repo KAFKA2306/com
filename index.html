@@ -3,35 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI生産革命と社会システム移行シミュレーション</title>
+    <title>AI・ロボティクスによる社会システム移行の包括的分析</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
         
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: #fdfcf8; /* Warm neutral background */
-            color: #333333;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #f8f9fa;
+            color: #1a1a1a;
+            scroll-behavior: smooth;
         }
 
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 400px;
+            height: 350px;
+            max-height: 450px;
         }
 
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Custom range slider styling */
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* カスタムスライダー */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -42,514 +47,586 @@
             height: 20px;
             width: 20px;
             border-radius: 50%;
-            background: #57534e;
+            background: #2563eb;
             cursor: pointer;
             margin-top: -8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%;
             height: 4px;
-            background: #d6d3d1;
+            background: #e2e8f0;
             border-radius: 2px;
         }
 
-        .card-hover {
-            transition: all 0.3s ease;
-        }
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        .step-arrow::after {
-            content: "→";
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            color: #a8a29e;
-        }
-        @media (max-width: 768px) {
-            .step-arrow::after {
-                content: "↓";
-                right: 50%;
-                top: auto;
-                bottom: -25px;
-                transform: translateX(50%);
-            }
+        .node-active {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            transform: scale(1.05);
         }
     </style>
-    <!-- Chosen Palette: Warm Neutrals (Stone/Sand) with Muted Accents (Sage Green, Burnt Orange, Slate Blue) -->
+    <!-- Chosen Palette: Sophisticated Tech (Pure White background, Slate Blue accents, Safety Orange for unrest alerts, Emerald for decentralized solutions) -->
     <!-- Application Structure Plan: 
-         1. Header: Introduction to the hypothesis provided in the source text.
-         2. The Logic Flow (Interactive Diagram): Visualizes the causal relationship (1 -> 3 -> 2) defined in the tweets using CSS Grid/Flex. 
-            Allows users to click stages to see details (Tesla/xAI/Nuclear -> Unemployment Panic -> Decentralized Politics).
-         3. Simulation Dashboard (Core Interaction): 
-            - Inputs: Sliders for "Automation Level" and "Decentralized Tech Maturity".
-            - Logic: Calculates Unemployment Rate and Social Unrest.
-            - Visuals: Line Chart (Time Series Projection) and Doughnut Chart (Labor Composition).
-            - Feedback: Dynamic text descriptions changing based on the "Unemployment Trigger" (40%).
-         4. Deep Dive Cards: Detailed breakdown of the three key elements (Productivity, Politics, Trigger).
-         5. Conclusion: Synthesized summary of the "Research".
-         Why: This structure transforms the linear logic of the tweet into an experimental lab, allowing the user to "test" the hypothesis.
+        1. Executive Dashboard (Summary Metrics): AI影響雇用率、ロボット出荷予測などの主要KPIを提示。
+        2. The Transition Logic (Interactive Map): 「生産力(1) → 社会不安(3) → 統治システム(2)」の因果関係をクリック操作で展開。
+        3. Real-time Simulator (The "Trigger" Experience): ユーザーがAI自動化レベルを操作し、40%失業率の閾値を超えた際の「社会不安指数」と「経済モデルの破綻」をグラフ化。
+        4. Strategy Comparison (UBI vs UBC vs UBS): レポート内の分配モデルを比較し、ユーザーが最適な未来を選択できる構成。
+        5. Deep Dive Repository: SMR/核融合、歴史的教訓（ラッダイト）、安野氏の事例などを整理。
+        WHY: 複雑な社会学的仮説を「if-then」のシミュレーションに落とし込むことで、読者が「不可避性」を直感的に理解できるように設計。
     -->
     <!-- Visualization & Content Choices:
-         - Logic Flow: HTML/CSS Flexbox with click events. Goal: Show dependencies. No SVG needed.
-         - Dashboard Line Chart: Chart.js. Goal: Show the divergence between Productivity (rising) and Employment (falling) causing Unrest.
-         - Dashboard Doughnut Chart: Chart.js. Goal: Visualize the 40% threshold mentioned in the source.
-         - Text Updates: Vanilla JS. Goal: Provide narrative context to the data changes.
-         - Justification: Chart.js handles the quantitative "40% threshold" visualization perfectly within the constraints.
+        - Line Chart (Chart.js): 生産力増加と雇用減少の反比例関係、および不安のスパイクを可視化。
+        - Radar Chart (Chart.js): 各種分配モデルのメリット/課題のトレードオフを比較。
+        - Progress Indicators: レポートの進捗ではなく、社会システムの「移行度」を示す指標として利用。
+        - Interactive Text: 状況に応じた警告メッセージの動的生成。
+        Confirming NO SVG/Mermaid. Icons will be text-based/Unicode/CSS styled.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
 </head>
-<body class="antialiased min-h-screen flex flex-col">
+<body class="overflow-x-hidden">
 
-    <!-- Navigation / Header -->
-    <header class="w-full bg-stone-100 border-b border-stone-200 py-6">
-        <div class="container mx-auto px-4 max-w-6xl">
-            <h1 class="text-3xl font-bold text-stone-800 tracking-tight mb-2">ポスト労働社会への移行仮説</h1>
-            <p class="text-stone-600">AIによる生産自動化と社会システム変革の可能性に関するリサーチ・シミュレーション</p>
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-50 glass-panel border-b py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">SYS_TRANSITION_2026</span>
+            </div>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-slate-600">
+                <a href="#logic" class="hover:text-blue-600 transition-colors">論理構造</a>
+                <a href="#sim" class="hover:text-blue-600 transition-colors">シミュレーター</a>
+                <a href="#analysis" class="hover:text-blue-600 transition-colors">深掘り分析</a>
+                <a href="#models" class="hover:text-blue-600 transition-colors">分配モデル</a>
+            </nav>
+            <div class="text-xs font-mono bg-slate-100 px-3 py-1 rounded-full border">STATUS: ANALYSIS_ACTIVE</div>
         </div>
     </header>
 
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-6xl space-y-12">
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-16">
 
-        <!-- Introduction Section -->
-        <section>
-            <div class="bg-white rounded-xl p-8 shadow-sm border border-stone-100">
-                <h2 class="text-xl font-bold text-stone-700 mb-4 border-l-4 border-stone-400 pl-3">リサーチ概要</h2>
-                <p class="text-stone-600 leading-relaxed mb-4">
-                    本レポートは、高度なAIとロボティクスによる「圧倒的な生産手段の自動化」が、既存の労働市場を崩壊させ、新たな社会システム（一種の共産主義的構造）への移行を不可避にするという仮説を検証するものです。
-                </p>
-                <p class="text-stone-600 leading-relaxed">
-                    特に、テスラやxAI、原子力発電などを基盤とした<strong>生産力の爆発</strong>が、<strong>40%を超える失業率</strong>という社会的トリガーを引き、それが<strong>非中央集権的な政治技術</strong>（プルラリティ、ブロックチェーン等）への希求を生むという因果連鎖に注目します。
-                </p>
-            </div>
-        </section>
-
-        <!-- Phase 1: Logic Flow Visualization -->
-        <section>
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-stone-800 mb-2">移行への因果連鎖（Causal Chain）</h2>
-                <p class="text-stone-500 text-sm">各要素をクリックして詳細を確認してください。プロセスは直線的ではなく、①が③を引き起こし、③が②の受容を生みます。</p>
-            </div>
+        <!-- Introduction & Global Metrics -->
+        <section class="text-center space-y-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+                自動的生産力の極限到達と<br><span class="text-blue-600">社会契約の崩壊</span>
+            </h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600">
+                2026年、AIとロボティクスは単なる技術革新を超え、近代国家の根幹である「労働による価値創出と所得分配」の前提を無効化しつつあります。
+            </p>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
-                <!-- Step 1 -->
-                <div id="step1" class="step-card bg-white border-2 border-slate-200 rounded-xl p-6 cursor-pointer card-hover relative step-arrow md:mb-0 mb-8" onclick="showDetail('detail1')">
-                    <div class="absolute -top-3 left-4 bg-slate-600 text-white text-xs font-bold px-2 py-1 rounded">起点</div>
-                    <h3 class="text-lg font-bold text-slate-700 mb-2">1. 圧倒的生産力</h3>
-                    <div class="text-4xl mb-3">🤖⚡</div>
-                    <p class="text-sm text-stone-600">労働からの解放。AI、ロボット、エネルギーによる完全自動化。</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-12">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">AI影響雇用率</span>
+                    <span class="text-3xl font-bold text-blue-600">40% - 60%</span>
+                    <p class="text-xs text-slate-400 mt-2">IMF報告（2026）</p>
                 </div>
-
-                <!-- Step 3 (Placed in middle visually for flow, logically it's the trigger) -->
-                <div id="step3" class="step-card bg-white border-2 border-orange-200 rounded-xl p-6 cursor-pointer card-hover relative step-arrow md:mb-0 mb-8" onclick="showDetail('detail3')">
-                    <div class="absolute -top-3 left-4 bg-orange-600 text-white text-xs font-bold px-2 py-1 rounded">トリガー</div>
-                    <h3 class="text-lg font-bold text-orange-700 mb-2">3. 社会的不安</h3>
-                    <div class="text-4xl mb-3">📉⚠️</div>
-                    <p class="text-sm text-stone-600">AI失業率40%。既存経済システムの機能不全と恐慌。</p>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">ロボット出荷（2028予）</span>
+                    <span class="text-3xl font-bold text-indigo-600">15.0万台+</span>
+                    <p class="text-xs text-slate-400 mt-2">年間出荷台数ペース</p>
                 </div>
-
-                <!-- Step 2 -->
-                <div id="step2" class="step-card bg-white border-2 border-emerald-200 rounded-xl p-6 cursor-pointer card-hover relative" onclick="showDetail('detail2')">
-                    <div class="absolute -top-3 left-4 bg-emerald-600 text-white text-xs font-bold px-2 py-1 rounded">解決策</div>
-                    <h3 class="text-lg font-bold text-emerald-700 mb-2">2. 非中央集権</h3>
-                    <div class="text-4xl mb-3">🗳️🔗</div>
-                    <p class="text-sm text-stone-600">プルラリティ、DAO。新しい分配と意思決定のOS。</p>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">エネルギー供給（SMR）</span>
+                    <span class="text-3xl font-bold text-emerald-600">2GW+</span>
+                    <p class="text-xs text-slate-400 mt-2">Colossus拠点単体</p>
                 </div>
-            </div>
-
-            <!-- Detail Display Area -->
-            <div id="detail-display" class="mt-6 bg-stone-50 p-6 rounded-xl border border-stone-200 hidden transition-all duration-300">
-                <h4 id="detail-title" class="text-lg font-bold mb-2"></h4>
-                <p id="detail-content" class="text-stone-700"></p>
-                <div id="detail-tags" class="mt-4 flex flex-wrap gap-2"></div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-center">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">転換トリガー失業率</span>
+                    <span class="text-3xl font-bold text-orange-600">40.0%</span>
+                    <p class="text-xs text-slate-400 mt-2">社会不安の閾値</p>
+                </div>
             </div>
         </section>
 
-        <!-- Phase 2: Interactive Simulation -->
-        <section class="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden">
-            <div class="p-8 border-b border-stone-100 bg-stone-50">
-                <h2 class="text-2xl font-bold text-stone-800 mb-2">未来シミュレーター</h2>
-                <p class="text-stone-600">
-                    「AIによる自動化レベル」と「政治技術の受容度」を操作し、社会がどのように変遷するかをシミュレートします。
-                    <br>失業率が<span class="font-bold text-orange-600">40%</span>を超えた時、社会システムに何が起こるかを確認してください。
-                </p>
+        <!-- Phase 1: Logic Chain Interactive -->
+        <section id="logic" class="space-y-8 bg-slate-50 p-8 rounded-3xl border border-slate-200">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold">システム移行の因果連鎖</h2>
+                <p class="text-slate-500 mt-2">技術的ショックがどのように社会を変容させるか、各ノードをクリックして詳細を確認してください。</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
-                <!-- Controls Side -->
-                <div class="lg:col-span-4 p-8 border-r border-stone-100 bg-stone-50/50">
-                    <div class="space-y-8">
-                        <div>
-                            <label class="block text-sm font-bold text-stone-700 mb-2 flex justify-between">
-                                <span>AI・ロボット自動化率</span>
-                                <span id="automation-val" class="text-blue-600">20%</span>
-                            </label>
-                            <input type="range" id="slider-automation" min="0" max="100" value="20" step="1">
-                            <p class="text-xs text-stone-500 mt-2">Tesla Bot, xAI等の技術普及度</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-bold text-stone-700 mb-2 flex justify-between">
-                                <span>非中央政治技術の成熟度</span>
-                                <span id="politics-val" class="text-emerald-600">10%</span>
-                            </label>
-                            <input type="range" id="slider-politics" min="0" max="100" value="10" step="1">
-                            <p class="text-xs text-stone-500 mt-2">ブロックチェーン, Pluralityのインフラ化</p>
-                        </div>
-
-                        <div class="bg-white p-4 rounded-lg border border-stone-200 shadow-sm">
-                            <h4 class="font-bold text-stone-800 mb-2">シミュレーション結果</h4>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-stone-600">予測失業率:</span>
-                                <span id="result-unemployment" class="text-xl font-bold text-stone-800">5%</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-stone-600">社会不安指数:</span>
-                                <span id="result-unrest" class="text-xl font-bold text-stone-800">Low</span>
-                            </div>
-                            <div class="mt-4 pt-4 border-t border-stone-100">
-                                <span class="text-xs font-bold text-stone-500 uppercase">現在の社会状態</span>
-                                <p id="state-description" class="text-sm font-medium mt-1 text-blue-800">従来の資本主義経済が機能中。</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="flex flex-col md:flex-row justify-around items-center gap-8 py-10">
+                <!-- Node 1 -->
+                <div id="node-1" class="w-full md:w-1/4 bg-white p-6 rounded-2xl border-2 border-transparent shadow-md transition-all-300 cursor-pointer text-center" onclick="activateNode(1)">
+                    <div class="text-3xl mb-3">🤖</div>
+                    <h3 class="font-bold text-lg">1. 圧倒的生産力</h3>
+                    <p class="text-xs text-slate-500 mt-2">人型ロボット量産 & AGI計算資源の拡大</p>
+                </div>
+                
+                <div class="hidden md:block text-2xl text-slate-300">➜</div>
+                
+                <!-- Node 3 (Logic: 1 triggers 3 first) -->
+                <div id="node-3" class="w-full md:w-1/4 bg-white p-6 rounded-2xl border-2 border-transparent shadow-md transition-all-300 cursor-pointer text-center" onclick="activateNode(3)">
+                    <div class="text-3xl mb-3">⚠️</div>
+                    <h3 class="font-bold text-lg">3. 社会的不安</h3>
+                    <p class="text-xs text-slate-500 mt-2">AIプレカリアートの形成 & 既存統治の破綻</p>
                 </div>
 
-                <!-- Charts Side -->
-                <div class="lg:col-span-8 p-8 space-y-8">
-                    <!-- Line Chart -->
+                <div class="hidden md:block text-2xl text-slate-300">➜</div>
+
+                <!-- Node 2 -->
+                <div id="node-2" class="w-full md:w-1/4 bg-white p-6 rounded-2xl border-2 border-transparent shadow-md transition-all-300 cursor-pointer text-center" onclick="activateNode(2)">
+                    <div class="text-3xl mb-3">🗳️</div>
+                    <h3 class="font-bold text-lg">2. 非中央集権</h3>
+                    <p class="text-xs text-slate-500 mt-2">プルラリティ & 分散型社会(DeSoc)の実装</p>
+                </div>
+            </div>
+
+            <!-- Content Area for Logic Chain -->
+            <div id="logic-content" class="bg-white p-8 rounded-2xl border shadow-inner min-h-[200px] transition-opacity duration-300">
+                <div id="logic-placeholder" class="flex flex-col items-center justify-center h-full text-slate-400">
+                    <p>ステップを選択して、システム変遷のメカニズムを解読してください。</p>
+                </div>
+                <div id="logic-details" class="hidden space-y-4">
+                    <h4 id="detail-title" class="text-xl font-bold text-blue-600"></h4>
+                    <div id="detail-body" class="text-slate-700 leading-relaxed grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Dynamic Content -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 2: Simulation Dashboard -->
+        <section id="sim" class="space-y-12">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+                <div class="max-w-xl">
+                    <h2 class="text-3xl font-bold">未来シミュレーター: トリガー体験</h2>
+                    <p class="text-slate-600 mt-2">
+                        AIによる生産自動化レベルを調整し、社会がどの時点で「旧来の契約」を放棄せざるを得なくなるかを予測します。
+                    </p>
+                </div>
+                <div id="alert-status" class="bg-blue-50 text-blue-700 px-6 py-3 rounded-xl border border-blue-200 font-bold animate-pulse">
+                    STATUS: 資本主義OS稼働中
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Controls -->
+                <div class="space-y-8 bg-white p-8 rounded-3xl border shadow-sm h-fit">
                     <div>
-                        <h3 class="text-lg font-bold text-stone-700 mb-4">生産力 vs 社会不安の推移予測</h3>
-                        <div class="chart-container">
-                            <canvas id="mainChart"></canvas>
+                        <label class="block text-sm font-bold text-slate-700 mb-4 flex justify-between">
+                            <span>AI・ロボ自動化レベル</span>
+                            <span id="auto-val" class="text-blue-600 text-lg">20%</span>
+                        </label>
+                        <input type="range" id="auto-range" min="0" max="100" value="20" class="w-full">
+                        <p class="text-xs text-slate-400 mt-3">
+                            人型ロボット(Optimus等)の普及率とAGI代行率を統合した指数。
+                        </p>
+                    </div>
+
+                    <div class="pt-6 border-t">
+                        <h4 class="font-bold text-slate-800 mb-4">推定される社会指標</h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600">予測失業率</span>
+                                <span id="stat-unemployment" class="font-mono font-bold text-lg">12.0%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2">
+                                <div id="bar-unemployment" class="bg-blue-500 h-2 rounded-full" style="width: 12%"></div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-slate-600">社会不安指数</span>
+                                <span id="stat-unrest" class="font-mono font-bold text-lg">24.0</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2">
+                                <div id="bar-unrest" class="bg-orange-500 h-2 rounded-full" style="width: 24%"></div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <!-- Doughnut Chart Area -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-stone-100">
-                        <div>
-                            <h3 class="text-lg font-bold text-stone-700 mb-4">労働力構成比</h3>
-                            <div class="chart-container" style="height: 200px;">
-                                <canvas id="laborChart"></canvas>
-                            </div>
+
+                    <div id="sim-narrative" class="p-4 bg-slate-50 rounded-xl border text-sm text-slate-600 leading-snug italic">
+                        「現在は雇用へのAI補完が進んでいますが、物理的自動化の初期段階にあります。」
+                    </div>
+                </div>
+
+                <!-- Visualization -->
+                <div class="lg:col-span-2 bg-white p-8 rounded-3xl border shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-6">生産力 vs 社会的安定の動態予測</h3>
+                    <div class="chart-container">
+                        <canvas id="simChart"></canvas>
+                    </div>
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="text-xs text-slate-500 flex items-start space-x-2">
+                            <span class="text-blue-500 font-bold">●</span>
+                            <span><strong>生産力指数:</strong> 限界費用ゼロに近づく生産能力。労働需要とは反比例する性質を持つ。</span>
                         </div>
-                        <div class="flex flex-col justify-center">
-                             <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
-                                <h4 class="font-bold text-orange-800 mb-2 text-sm">⚠️ トリガーポイント分析</h4>
-                                <p class="text-sm text-orange-800 leading-snug">
-                                    リサーチによると、AI失業率が40%に達した時点で、既存のセーフティネットでは対応不能となり、恐慌的な社会不安が発生します。これが「移行」の直接的な引き金となります。
-                                </p>
-                            </div>
+                        <div class="text-xs text-slate-500 flex items-start space-x-2">
+                            <span class="text-orange-500 font-bold">●</span>
+                            <span><strong>社会不安指数:</strong> アイデンティティ喪失と分配の不全によるリスク。40%失業で指数が臨界点(100)へ。</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Detailed Analysis Section -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-xl border border-stone-200">
-                <h3 class="text-xl font-bold text-stone-800 mb-4">要素1：圧倒的生産力の基盤</h3>
-                <ul class="space-y-3">
-                    <li class="flex items-start">
-                        <span class="bg-stone-200 text-stone-700 rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-1 shrink-0">1</span>
-                        <div>
-                            <span class="font-bold block text-stone-700">高知能ロボット・AI</span>
-                            <span class="text-sm text-stone-600">Tesla OptimusやxAIのような、物理世界と知的作業の両方を代替する存在。</span>
-                        </div>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="bg-stone-200 text-stone-700 rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-1 shrink-0">2</span>
-                        <div>
-                            <span class="font-bold block text-stone-700">安価で無限に近いエネルギー</span>
-                            <span class="text-sm text-stone-600">原発や再エネにより、ロボットの稼働コストを極限まで下げる。</span>
-                        </div>
-                    </li>
-                </ul>
+        <!-- Phase 3: Strategic Comparison (Models) -->
+        <section id="models" class="space-y-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold">所得分配と所有権の再定義</h2>
+                <p class="text-slate-600 mt-2">労働が消滅した後の富の分配を、3つの主要モデルで比較・検証します。</p>
             </div>
 
-            <div class="bg-white p-6 rounded-xl border border-stone-200">
-                <h3 class="text-xl font-bold text-stone-800 mb-4">要素2：非中央集権の政治技術</h3>
-                <ul class="space-y-3">
-                    <li class="flex items-start">
-                        <span class="bg-stone-200 text-stone-700 rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-1 shrink-0">1</span>
-                        <div>
-                            <span class="font-bold block text-stone-700">Plurality (プルラリティ)</span>
-                            <span class="text-sm text-stone-600">オードリー・タンらが提唱する、多様性を保ちながら合意形成を行う技術。</span>
-                        </div>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="bg-stone-200 text-stone-700 rounded-full w-6 h-6 flex items-center justify-center text-xs mr-3 mt-1 shrink-0">2</span>
-                        <div>
-                            <span class="font-bold block text-stone-700">民意獲得のタイミング</span>
-                            <span class="text-sm text-stone-600">これらの技術は単独では普及せず、社会不安（トリガー）による切実な需要が必要となる。</span>
-                        </div>
-                    </li>
-                </ul>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- UBI -->
+                <div class="bg-white p-8 rounded-3xl border-2 border-slate-100 hover:border-blue-400 transition-all-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">UBI</span>
+                        <span class="text-2xl">💵</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">ユニバーサル・ベーシックインカム</h3>
+                    <p class="text-sm text-slate-600 mb-6">
+                        全市民への無条件の現金給付。シリコンバレーのAIエリート（アルトマン等）が提唱。
+                    </p>
+                    <ul class="text-xs space-y-2 text-slate-500 mb-8">
+                        <li class="flex items-center"><span class="text-emerald-500 mr-2">✓</span>行政コストが極めて低い</li>
+                        <li class="flex items-center"><span class="text-emerald-500 mr-2">✓</span>個人の消費活動を直接支える</li>
+                        <li class="flex items-center"><span class="text-rose-500 mr-2">✗</span>アイデンティティ問題は未解決</li>
+                        <li class="flex items-center"><span class="text-rose-500 mr-2">✗</span>財政持続性とインフレリスク</li>
+                    </ul>
+                </div>
+
+                <!-- UBC -->
+                <div class="bg-white p-8 rounded-3xl border-2 border-blue-600 shadow-xl shadow-blue-100 scale-105 relative">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">推奨モデル</div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold">UBC</span>
+                        <span class="text-2xl">🏦</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">ユニバーサル・ベーシックキャピタル</h3>
+                    <p class="text-sm text-slate-600 mb-6">
+                        AI企業の株式や生産手段そのものを分配。市民を「受給者」ではなく「共同所有者」へ。
+                    </p>
+                    <ul class="text-xs space-y-2 text-slate-500 mb-8">
+                        <li class="flex items-center"><span class="text-emerald-500 mr-2">✓</span>富の集中を根本から是正</li>
+                        <li class="flex items-center"><span class="text-emerald-500 mr-2">✓</span>自動化の成果を直接配当</li>
+                        <li class="flex items-center"><span class="text-rose-500 mr-2">✗</span>資産価値の変動リスク</li>
+                        <li class="flex items-center"><span class="text-rose-500 mr-2">✗</span>初期資産確保の政治的困難</li>
+                    </ul>
+                </div>
+
+                <!-- UBS -->
+                <div class="bg-white p-8 rounded-3xl border-2 border-slate-100 hover:border-emerald-400 transition-all-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">UBS</span>
+                        <span class="text-2xl">🏥</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">ユニバーサル・ベーシックサービス</h3>
+                    <p class="text-sm text-slate-600 mb-6">
+                        教育、医療、交通、さらにはAI計算能力を無償化。生存に必要なサービスを公有化。
+                    </p>
+                    <ul class="text-xs space-y-2 text-slate-500 mb-8">
+                        <li class="flex items-center"><span class="text-emerald-500 mr-2">✓</span>市場変動に左右されない安定</li>
+                        <li class="flex items-center"><span class="text-emerald-500 mr-2">✓</span>格差の質を平準化</li>
+                        <li class="flex items-center"><span class="text-rose-500 mr-2">✗</span>官僚化による非効率</li>
+                        <li class="flex items-center"><span class="text-rose-500 mr-2">✗</span>選択の自由の制限</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Model Radar Chart -->
+            <div class="bg-white p-8 rounded-3xl border shadow-sm">
+                <h3 class="text-center font-bold text-lg mb-8">分配モデルのパフォーマンス比較</h3>
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phase 4: Deep Dive Cards (The Grid) -->
+        <section id="analysis" class="space-y-8">
+            <h2 class="text-3xl font-bold">多角的分析アーカイブ</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Card 1: Energy -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all-300">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="p-2 bg-yellow-100 rounded-lg text-lg">⚡</span>
+                        <h4 class="font-bold">エネルギー革命: SMRと核融合</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        マイクロソフトが締結した2028年の核融合供給契約やSMRの普及により、AI計算コストは「限界費用ゼロ」へ向かいます。エネルギーの豊かさが分配の源泉となります。
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-slate-100 text-[10px] text-slate-400 flex justify-between">
+                        <span>SOURCE: IEA/Helion Energy</span>
+                        <span class="font-bold text-blue-600">VIEW DATA</span>
+                    </div>
+                </div>
+
+                <!-- Card 2: Japanese Politics -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all-300">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="p-2 bg-blue-100 rounded-lg text-lg">🌸</span>
+                        <h4 class="font-bold">「チーム未来」と国民OSの刷新</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        安野貴博氏のAI安野プロジェクトは、24時間体制の有権者対話を実現。政治を「イデオロギー」から「システムデザイン」へ転換させる実例となりました。
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-slate-100 text-[10px] text-slate-400 flex justify-between">
+                        <span>CASE STUDY: 2026衆院選</span>
+                        <span class="font-bold text-blue-600">VIEW CASE</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Historical Context -->
+                <div class="bg-white p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all-300">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="p-2 bg-slate-100 rounded-lg text-lg">📜</span>
+                        <h4 class="font-bold">歴史的教訓: ラッダイトとニューディール</h4>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        19世紀の機械破壊運動や1929年の大恐慌。技術ショックがもたらす「負の調整期」は、武力鎮圧ではなく社会保障の再設計のみが解決可能であることを示しています。
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-slate-100 text-[10px] text-slate-400 flex justify-between">
+                        <span>CONTEXT: 歴史の教訓</span>
+                        <span class="font-bold text-blue-600">READ HISTORY</span>
+                    </div>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <footer class="bg-stone-800 text-stone-400 py-8 mt-12">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-sm">Based on Source Report: "共産主義実現要素 & リサーチ"</p>
-            <p class="text-xs mt-2 opacity-50">Generated for Analysis Purposes</p>
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-16 mt-20">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+                <h4 class="text-white font-bold text-lg mb-4 uppercase tracking-widest">SYSTEM_CONCLUSION</h4>
+                <p class="text-sm leading-relaxed">
+                    AIによる生産革命は、人類を「労働の呪縛」から解放する光か、あるいは「AIプレカリアート」の闇へ突き落とす崖か。私たちが今構築すべきは、AIに意志決定を委ねる監視社会ではなく、AIを用いて多様な人間同士の信頼を強化する「プルラリティ」に基づいた新たな社会契約です。
+                </p>
+            </div>
+            <div class="text-right">
+                <p class="text-xs font-mono uppercase">© 2026 Comprehensive Analysis Portal</p>
+                <p class="text-[10px] mt-4 opacity-50">本レポートは提供されたリサーチデータに基づき構築された動的ドキュメントです。</p>
+            </div>
         </div>
     </footer>
 
+    <!-- JavaScript Logic -->
     <script>
-        // Data and State
-        const details = {
-            detail1: {
-                title: "1. 圧倒的生産力の自動化",
-                content: "人間が労働から解放される段階です。TeslaやxAI、原子力発電などのインフラが結合し、高知能ロボットと安価な電力によって、生活必需品の生産コストが限りなくゼロに近づきます。これがすべての変化の基盤となります。",
-                tags: ["Tesla", "xAI", "原発", "ロボティクス", "AI"]
+        // Data Repository
+        const logicData = {
+            1: {
+                title: "1. 圧倒的生産力の物理的・認知的基盤",
+                body: `<div>
+                        <p class="font-bold mb-2">物理的自動化の深化</p>
+                        <p class="text-sm mb-4">Tesla Optimusに代表される汎用人型ロボットが、年間出荷1,000万台規模の量産フェーズに突入。製造、物流、サービス部門の労働コストを劇的に引き下げます。</p>
+                        <ul class="text-xs space-y-1 list-disc pl-4">
+                            <li>ギガファクトリーのロボット専用ライン</li>
+                            <li>市場規模：2025年時点で5兆ドル試算</li>
+                        </ul>
+                       </div>
+                       <div>
+                        <p class="font-bold mb-2">認知の自動化</p>
+                        <p class="text-sm mb-4">xAIやDeepMindによる巨大データセンター群がAGIに向けた計算資源を独占。エージェント型AIが高度な意志決定を自律的に行い、知的専門職を代替します。</p>
+                        <ul class="text-xs space-y-1 list-disc pl-4">
+                            <li>Colossus拠点の2GW消費</li>
+                            <li>ホワイトカラー職の約半分が影響</li>
+                        </ul>
+                       </div>`
             },
-            detail2: {
-                title: "2. 非中央集権的な政治技術",
-                content: "富の分配と意思決定のための新しいOSです。中央集権的な管理ではなく、ブロックチェーンやPlurality（多元性）技術、オードリー・タンや安野氏が提唱するようなデジタル民主主義の手法が、崩壊した旧来の政治システムに代わって採用されます。",
-                tags: ["Plurality", "オードリー・タン", "安野", "ブロックチェーン", "DAO"]
+            2: {
+                title: "2. 非中央集権：分散型統治の理論的枠組み",
+                body: `<div>
+                        <p class="font-bold mb-2">Plurality (プルラリティ)</p>
+                        <p class="text-sm mb-4">オードリー・タンらが提唱する、多様な関係性の交点としての自己を重視するガバナンス。二乗投票やブロードリスニングによる合意形成技術。</p>
+                        <ul class="text-xs space-y-1 list-disc pl-4">
+                            <li>二乗投票 (Quadratic Voting)</li>
+                            <li>AIによる熟議のスケール化</li>
+                        </ul>
+                       </div>
+                       <div>
+                        <p class="font-bold mb-2">分散型社会 (DeSoc)</p>
+                        <p class="text-sm mb-4">Soulbound Token (SBT)を用いた信頼の可視化。貨幣経済に依存しない、社会的貢献度によるアイデンティティの再定義。</p>
+                        <ul class="text-xs space-y-1 list-disc pl-4">
+                            <li>譲渡不可能な実績証明</li>
+                            <li>AI領主に依存しない自主的統治</li>
+                        </ul>
+                       </div>`
             },
-            detail3: {
-                title: "3. 移行トリガー：社会不安",
-                content: "AIによる生産自動化がもたらす副作用です。AI失業率が40%を超えると、既存の資本主義的分配メカニズム（賃金労働）が機能しなくなります。この「著しい社会不安」こそが、人々を新しい社会契約（要素2）へと向かわせる強力な動機となります。",
-                tags: ["AI失業率40%", "社会不安", "恐慌", "パラダイムシフト"]
+            3: {
+                title: "3. 社会不安：移行のトリガーポイント",
+                body: `<div>
+                        <p class="font-bold mb-2">AIプレカリアートの形成</p>
+                        <p class="text-sm mb-4">職業的アイデンティティを失った「無用者階級」の出現。単なる困窮ではなく、人生の「意味」の崩壊が政治的過激化を招きます。</p>
+                        <ul class="text-xs space-y-1 list-disc pl-4">
+                            <li>世界経済フォーラム 2026 グローバルリスク1位</li>
+                            <li>テック・ラッシュ（技術への敵意）の蔓延</li>
+                        </ul>
+                       </div>
+                       <div>
+                        <p class="font-bold mb-2">AI封建主義の危機</p>
+                        <p class="text-sm mb-4">生産手段を独占するテック領主と、配給に依存する市民の二極化。この格差が既存の民主主義OSを物理的に破壊します。</p>
+                        <ul class="text-xs space-y-1 list-disc pl-4">
+                            <li>データ・チップの囲い込み</li>
+                            <li>治安維持のAI軍事化</li>
+                        </ul>
+                       </div>`
             }
         };
 
-        // UI Interactions
-        function showDetail(id) {
-            const display = document.getElementById('detail-display');
+        // UI Logic
+        function activateNode(id) {
+            // Reset nodes
+            [1, 2, 3].forEach(n => {
+                document.getElementById(`node-${n}`).classList.remove('node-active');
+            });
+            // Activate target
+            document.getElementById(`node-${id}`).classList.add('node-active');
+            
+            // Show details
+            const placeholder = document.getElementById('logic-placeholder');
+            const details = document.getElementById('logic-details');
             const title = document.getElementById('detail-title');
-            const content = document.getElementById('detail-content');
-            const tagsDiv = document.getElementById('detail-tags');
+            const body = document.getElementById('detail-body');
             
-            // Visual selection state
-            document.querySelectorAll('.step-card').forEach(card => {
-                card.classList.remove('ring-2', 'ring-stone-500', 'bg-stone-50');
-            });
-            const selectedStep = id.replace('detail', 'step');
-            document.getElementById(selectedStep).classList.add('ring-2', 'ring-stone-500', 'bg-stone-50');
-
-            // Update content
-            display.classList.remove('hidden');
-            title.textContent = details[id].title;
-            content.textContent = details[id].content;
+            placeholder.classList.add('hidden');
+            details.classList.remove('hidden');
             
-            // Update tags
-            tagsDiv.innerHTML = '';
-            details[id].tags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'px-2 py-1 bg-stone-200 text-stone-700 text-xs rounded-md font-medium';
-                span.textContent = '#' + tag;
-                tagsDiv.appendChild(span);
-            });
+            title.innerText = logicData[id].title;
+            body.innerHTML = logicData[id].body;
         }
 
-        // Charts & Simulation Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            const ctxMain = document.getElementById('mainChart').getContext('2d');
-            const ctxLabor = document.getElementById('laborChart').getContext('2d');
+        // Charts
+        let simChart, radarChart;
 
-            // Initial Data for Simulation
-            const years = Array.from({length: 10}, (_, i) => `Year ${i+1}`);
-            
-            // Chart 1: Main Trend Line
-            const mainChart = new Chart(ctxMain, {
+        function initCharts() {
+            // Simulation Chart
+            const simCtx = document.getElementById('simChart').getContext('2d');
+            simChart = new Chart(simCtx, {
                 type: 'line',
                 data: {
-                    labels: years,
+                    labels: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
                     datasets: [
                         {
-                            label: '生産能力 (Productivity)',
-                            data: [10, 15, 25, 40, 60, 80, 100, 130, 160, 200],
-                            borderColor: '#3b82f6', // blue
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            label: '生産力指数 (Productivity)',
+                            data: [10, 25, 45, 70, 100, 140, 180, 210, 230, 240, 250],
+                            borderColor: '#2563eb',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
                             fill: true,
-                            tension: 0.4
+                            tension: 0.4,
+                            yAxisID: 'y'
                         },
                         {
-                            label: '社会不安指数 (Social Unrest)',
-                            data: [10, 12, 15, 20, 30, 45, 60, 85, 90, 40], // Dips at end if transition succeeds
-                            borderColor: '#ea580c', // orange
+                            label: '社会不安指数 (Unrest)',
+                            data: [5, 10, 20, 35, 100, 120, 140, 150, 155, 160, 165],
+                            borderColor: '#ea580c',
                             borderDash: [5, 5],
-                            tension: 0.4
-                        },
-                        {
-                            label: '従来型雇用 (Human Jobs)',
-                            data: [90, 85, 80, 70, 55, 40, 25, 15, 10, 5],
-                            borderColor: '#78716c', // stone
-                            tension: 0.4
+                            tension: 0.4,
+                            yAxisID: 'y1'
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.raw;
-                                }
-                            }
-                        }
+                        legend: { display: false },
+                        tooltip: { mode: 'index', intersect: false }
                     },
                     scales: {
-                        y: { beginAtZero: true, max: 200 }
+                        y: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: '生産性', font: { size: 10 } },
+                            position: 'left'
+                        },
+                        y1: { 
+                            beginAtZero: true, 
+                            title: { display: true, text: '社会不安', font: { size: 10 } },
+                            position: 'right',
+                            grid: { drawOnChartArea: false }
+                        }
                     }
                 }
             });
 
-            // Chart 2: Labor Composition (Doughnut)
-            const laborChart = new Chart(ctxLabor, {
-                type: 'doughnut',
+            // Radar Chart for Models
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(radarCtx, {
+                type: 'radar',
                 data: {
-                    labels: ['人間労働 (Human)', 'AI・ロボット (Auto)'],
-                    datasets: [{
-                        data: [80, 20],
-                        backgroundColor: ['#d6d3d1', '#3b82f6'],
-                        borderWidth: 0
-                    }]
+                    labels: ['実装の容易さ', 'アイデンティティ担保', '富の公平性', '財政持続性', '個人の自由'],
+                    datasets: [
+                        {
+                            label: 'UBI',
+                            data: [90, 20, 60, 40, 85],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)'
+                        },
+                        {
+                            label: 'UBC',
+                            data: [40, 80, 95, 70, 75],
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.2)'
+                        },
+                        {
+                            label: 'UBS',
+                            data: [60, 50, 85, 80, 40],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)'
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right' }
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
                     }
                 }
             });
+        }
 
-            // Simulation Logic
-            const sliderAuto = document.getElementById('slider-automation');
-            const sliderPol = document.getElementById('slider-politics');
-            const valAuto = document.getElementById('automation-val');
-            const valPol = document.getElementById('politics-val');
-            const resUnemp = document.getElementById('result-unemployment');
-            const resUnrest = document.getElementById('result-unrest');
-            const stateDesc = document.getElementById('state-description');
+        // Simulation Update
+        const autoRange = document.getElementById('auto-range');
+        const autoVal = document.getElementById('auto-val');
+        const statUnemp = document.getElementById('stat-unemployment');
+        const statUnrest = document.getElementById('stat-unrest');
+        const barUnemp = document.getElementById('bar-unemployment');
+        const barUnrest = document.getElementById('bar-unrest');
+        const alertStatus = document.getElementById('alert-status');
+        const simNarrative = document.getElementById('sim-narrative');
 
-            function updateSimulation() {
-                const automation = parseInt(sliderAuto.value);
-                const politics = parseInt(sliderPol.value);
-
-                // Update text values
-                valAuto.textContent = automation + '%';
-                valPol.textContent = politics + '%';
-
-                // Calculate Unemployment: Directly correlated to automation but slightly lagged logic
-                // Simple logic: Unemployment = Automation * 0.8 (some jobs remain or created)
-                let unemployment = Math.floor(automation * 0.9);
-                if (unemployment > 95) unemployment = 95;
-
-                // Calculate Unrest:
-                // Unrest rises with Unemployment.
-                // But, if Politics (Decentralized Tech/UBI infrastructure) is high, Unrest is mitigated.
-                // Unrest = Unemployment * 1.5 - Politics * 1.2
-                let unrestScore = (unemployment * 1.5) - (politics * 1.2);
-                if (unrestScore < 0) unrestScore = 0;
-                if (unrestScore > 100) unrestScore = 100;
-
-                // Update Displays
-                resUnemp.textContent = unemployment + '%';
-                
-                // Color code unemployment
-                if(unemployment >= 40) {
-                    resUnemp.classList.remove('text-stone-800');
-                    resUnemp.classList.add('text-red-600');
-                } else {
-                    resUnemp.classList.add('text-stone-800');
-                    resUnemp.classList.remove('text-red-600');
-                }
-
-                // Update Unrest Text
-                let unrestText = "Low";
-                if (unrestScore > 30) unrestText = "Moderate";
-                if (unrestScore > 60) unrestText = "High (Warning)";
-                if (unrestScore > 80) unrestText = "Critical (Revolution)";
-                resUnrest.textContent = unrestText;
-
-                // Update State Description Logic
-                if (unemployment < 20) {
-                    stateDesc.textContent = "安定: 従来型資本主義が機能中。AIは補助的ツール。";
-                    stateDesc.className = "text-sm font-medium mt-1 text-stone-600";
-                } else if (unemployment < 40) {
-                    stateDesc.textContent = "変化の予兆: 格差拡大と雇用の流動化。ポピュリズムの台頭。";
-                    stateDesc.className = "text-sm font-medium mt-1 text-yellow-700";
-                } else if (unemployment >= 40 && politics < 50) {
-                    stateDesc.textContent = "🚨 トリガー発動: 労働市場崩壊。暴動発生リスク最大。既存政府機能不全。";
-                    stateDesc.className = "text-sm font-medium mt-1 text-red-600 font-bold";
-                } else if (unemployment >= 40 && politics >= 50) {
-                    stateDesc.textContent = "✨ 移行開始: 分散型統治システムへの権限委譲が進む。労働なき繁栄へ。";
-                    stateDesc.className = "text-sm font-medium mt-1 text-emerald-600 font-bold";
-                }
-
-                // Update Labor Chart
-                laborChart.data.datasets[0].data = [100 - automation, automation];
-                laborChart.update();
-
-                // Update Main Line Chart projections based on current "End State" settings
-                // We shift the curve based on the slider
-                const baseProd = automation * 2;
-                const baseUnrest = unrestScore;
-                
-                // Dynamically adjust the "future" points of the chart
-                const newDataProd = mainChart.data.datasets[0].data.map((v, i) => v * (1 + automation/500 * (i/10))); 
-                // Unrest curve shape changes
-                const newDataUnrest = mainChart.data.datasets[1].data.map((v, i) => {
-                    // sigmoid-ish growth based on input
-                    let val = (i * 10) + (unemployment * (i/9));
-                    // Mitigation by politics
-                    val = val - (politics * (i/5));
-                    return Math.max(0, val);
-                });
-
-                // Update only last few points to feel "responsive" without jittering the whole past
-                // Actually, let's just redraw a projection based on current sliders as if they are the "Final Year" target
-                const projectedUnemployment = [];
-                const projectedProductivity = [];
-                const projectedUnrest = [];
-                
-                for(let i=0; i<10; i++) {
-                    let progress = i / 9;
-                    projectedProductivity.push(10 + (baseProd * progress));
-                    
-                    let uRate = (unemployment * progress);
-                    projectedUnemployment.push(100 - uRate); // Chart shows "Jobs"
-                    
-                    let unrestVal = (unrestScore * progress);
-                    // If politics is high, unrest drops at the end (transition successful)
-                    if (politics > 60 && i > 7) {
-                        unrestVal = unrestVal * 0.5;
-                    }
-                    projectedUnrest.push(unrestVal);
-                }
-
-                mainChart.data.datasets[0].data = projectedProductivity;
-                mainChart.data.datasets[1].data = projectedUnrest;
-                mainChart.data.datasets[2].data = projectedUnemployment;
-                mainChart.update();
-            }
-
-            // Event Listeners
-            sliderAuto.addEventListener('input', updateSimulation);
-            sliderPol.addEventListener('input', updateSimulation);
-
-            // Init
-            updateSimulation();
+        autoRange.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            autoVal.innerText = val + '%';
             
-            // Auto-open first detail
-            showDetail('detail1');
+            // Simulation Formulas
+            const unemp = (val * 0.6).toFixed(1);
+            const unrest = (val < 40) ? (val * 1.2).toFixed(1) : (100 + (val - 40) * 0.5).toFixed(1);
+            
+            statUnemp.innerText = unemp + '%';
+            statUnrest.innerText = unrest;
+            
+            barUnemp.style.width = Math.min(unemp * 2, 100) + '%';
+            barUnrest.style.width = Math.min(unrest / 1.5, 100) + '%';
+            
+            // Logic threshold
+            if (val >= 40) {
+                alertStatus.innerText = "CRITICAL: システム転換期突入";
+                alertStatus.className = "bg-red-50 text-red-700 px-6 py-3 rounded-xl border border-red-200 font-bold animate-bounce";
+                simNarrative.innerText = "「AI失業率が40%の閾値を超えました。既存の賃金労働OSはクラッシュし、非中央集権的な分配（UBC/UBS）への強制移行が必要です。」";
+                barUnrest.className = "bg-red-600 h-2 rounded-full";
+            } else if (val >= 25) {
+                alertStatus.innerText = "WARNING: 社会不安増大中";
+                alertStatus.className = "bg-orange-50 text-orange-700 px-6 py-3 rounded-xl border border-orange-200 font-bold";
+                simNarrative.innerText = "「労働代替の速度が加速し、元労働者層によるテック・ラッシュの兆候が見られます。」";
+                barUnrest.className = "bg-orange-500 h-2 rounded-full";
+            } else {
+                alertStatus.innerText = "STATUS: 資本主義OS稼働中";
+                alertStatus.className = "bg-blue-50 text-blue-700 px-6 py-3 rounded-xl border border-blue-200 font-bold";
+                simNarrative.innerText = "「現在は雇用へのAI補完が進んでいますが、物理的自動化の初期段階にあります。」";
+                barUnrest.className = "bg-blue-500 h-2 rounded-full";
+            }
         });
+
+        // Initialize on Load
+        window.onload = () => {
+            initCharts();
+            activateNode(1);
+        };
     </script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/KAFKA2306/com/schemas/repository.schema.json",
+  "title": "KAFKA COM repository registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "repositories"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "role", "visibility_class", "purpose", "capabilities", "canonical_for"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+          "role": {"enum": ["command", "shared-resource", "domain", "archive"]},
+          "visibility_class": {"enum": ["public", "private", "review-required"]},
+          "purpose": {"type": "string", "minLength": 10},
+          "capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "canonical_for": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true}
+        }
+      }
+    }
+  }
+}

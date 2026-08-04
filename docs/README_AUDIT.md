@@ -6,10 +6,10 @@
 
 > **監査基準日:** 2026年8月5日  
 > **GitHub接続で確認したownerリポジトリ数:** 100  
-> **初回確認済み:** 36  
-> **未確認または再監査待ち:** 64  
-> **README更新・merge済み:** 16  
-> **初回確認で全面改稿を保留:** 19  
+> **初回確認済み:** 40  
+> **未確認または再監査待ち:** 60  
+> **README更新・merge済み:** 18  
+> **初回確認で全面改稿を保留:** 21  
 > **snapshot・fork再監査:** 1
 
 ## 状態の意味
@@ -46,6 +46,8 @@
 | `KAFKA2306/fx` | merged | PR #1 / `f48ec0d7f7e82aa2db7bd64e453b92c20bc4bf9a` | data collector、model、backtest、risk管理がない2024年のFX相対価値研究構想として訂正 |
 | `KAFKA2306/imura` | merged | PR #1 / `9a3b574702d16ece9cea2629a005df249738adcb` | READMEだけのprivate design noteと明示し、原文・要約・解釈・identity・`investor`統合候補を整理 |
 | `KAFKA2306/333` | merged | PR #3 / `5602ecf04a3c44a785a15870227dd992f7411fa9` | raw data不在時の固定投資結論を除去し、未計算Pages、README契約test、CI整合を追加 |
+| `KAFKA2306/finBI` | merged | PR #3 / `62cc10c04c6fbe305d7b0de05d2819d12dfeeb0f` | 起動可能に見えた金融BIを、設定不整合・絶対path・旧依存を持つ非稼働legacy prototypeとして訂正 |
+| `KAFKA2306/salary` | merged | PR #2 / `8334ffec63e685e10d719ced6db4261ca5299e73` | 継続収集projectではなく、2024年2月のNotebook・CSV・third-party scraping snapshotとして訂正 |
 
 ## 作業中・障害・訂正履歴
 
@@ -53,7 +55,9 @@
 |---|---|---|---|
 | `KAFKA2306/investor` | incident | Issue #20 | 既存の全体TypeScript test/type/Biome/Python負債とdashboard dependency auditを継続。README PRでは解消済みと扱っていない |
 | `KAFKA2306/vrc_cast_event_calender` | false-positive-corrected | Issue #22 closed | Contents APIの大容量本文省略を0 byteと誤判定。Actions実測、README訂正、deploy snapshot CI追加で是正 |
-| `KAFKA2306/333` | incident-resolved | Issue #2 closed / PR #3 | 未計算なのに固定結論を表示していた状態を解消。Ruff、Black、mypy、pytestがActions run `30924897374`で成功 |
+| `KAFKA2306/333` | incident-resolved | Issue #2 closed / PR #3 | 固定投資結論を除去。Ruff、Black、mypy、pytestがActions run `30924897374`で成功 |
+| `KAFKA2306/finBI` | incident-resolved | Issue #2 closed / PR #3 | 存在しないsetup、未定義設定、個人pathを実装済みと読める状態を訂正 |
+| `KAFKA2306/salary` | incident-resolved | Issue #1 closed / PR #2 | snapshotを現在の給与data pipelineと読める状態を訂正 |
 
 ### `vrc_cast_event_calender`誤判定の訂正証拠
 
@@ -101,6 +105,8 @@ PR #3ではREADMEだけでなく、生成template、Pages、workflow、契約tes
 | `KAFKA2306/auto-invest` | initial-review-current | 日本語で自動投資研究、実行境界、risk、検証を説明 |
 | `KAFKA2306/expense2` | initial-review-current | 日本語でexpense data処理、利用方法、構造、制約を説明 |
 | `KAFKA2306/adaptive_wear_generator_pro` | initial-review-current | 日本語で公開研究実装、品質監査、legacy/private版との境界を説明 |
+| `KAFKA2306/etf` | initial-review-current | 2024年Notebook・pickle snapshot、最新性非保証、Sharpe ratio前提、pickle risk、未実装改善を明示 |
+| `KAFKA2306/finAnalist` | initial-review-current | 明示symbol型の出典付き記述pipeline、未実装機能、raw close制約、test方法を実体と一致して説明 |
 
 ## snapshot・fork再監査
 
@@ -118,7 +124,7 @@ PR #3ではREADMEだけでなく、生成template、Pages、workflow、契約tes
 6. fork、source snapshot、upstream mirror
 7. 停止中・archive候補・小規模実験
 
-次の監査batchでは、未確認64件から金融・公開site・README-only・重複候補を先に抽出し、実体とREADMEの不一致が大きいものから個別Issue・PRへ分離します。
+次の監査batchでは、未確認60件から金融・公開site・README-only・重複候補を先に抽出し、実体とREADMEの不一致が大きいものから個別Issue・PRへ分離します。
 
 ## 監査手順
 

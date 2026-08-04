@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "schedules": [],
+  "notes": "A schedule is an execution trigger, not task truth. Every entry must reference a recurring-service work item and declare timezone, cadence or condition, executor class, and pause behavior."
+}

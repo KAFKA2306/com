@@ -1,0 +1,5 @@
+{
+  "schema_version": 1,
+  "services": [],
+  "notes": "Recurring responsibilities are added only after their purpose, target, executor, evidence policy, failure handling, and stop conditions are defined in a recurring-service issue."
+}

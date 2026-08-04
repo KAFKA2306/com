@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "repositories": [
+    {
+      "id": "KAFKA2306/com",
+      "role": "command",
+      "visibility_class": "public",
+      "purpose": "Portfolio-wide directives, governance, registries, incidents, decisions, and completion evidence",
+      "capabilities": ["issues", "pull_requests", "actions", "registry"],
+      "canonical_for": ["portfolio_control"]
+    },
+    {
+      "id": "KAFKA2306/agent-resources",
+      "role": "shared-resource",
+      "visibility_class": "public",
+      "purpose": "Distribution and synchronization of reusable agent skills and shared UI resources",
+      "capabilities": ["skills", "cli", "pages"],
+      "canonical_for": ["agent_skill_distribution"]
+    },
+    {
+      "id": "KAFKA2306/prompt-vault",
+      "role": "domain",
+      "visibility_class": "public",
+      "purpose": "Prompt and generated-asset product with static publishing",
+      "capabilities": ["prompts", "generated_assets", "pages"],
+      "canonical_for": ["prompt_product"]
+    },
+    {
+      "id": "KAFKA2306/investor",
+      "role": "domain",
+      "visibility_class": "review-required",
+      "purpose": "Investment research, company knowledge, and evidence-backed financial analysis",
+      "capabilities": ["financial_analysis", "data", "pages"],
+      "canonical_for": ["investment_research"]
+    },
+    {
+      "id": "KAFKA2306/CrewTrade",
+      "role": "domain",
+      "visibility_class": "review-required",
+      "purpose": "Quantitative research catalogue and evidence audits",
+      "capabilities": ["research", "data", "pages"],
+      "canonical_for": ["trade_research_catalogue"]
+    },
+    {
+      "id": "KAFKA2306/WealthAudit",
+      "role": "domain",
+      "visibility_class": "review-required",
+      "purpose": "Wealth analysis with actual, warning, and forecast boundaries",
+      "capabilities": ["financial_analysis", "pages"],
+      "canonical_for": ["wealth_audit"]
+    },
+    {
+      "id": "KAFKA2306/image2outfit",
+      "role": "domain",
+      "visibility_class": "review-required",
+      "purpose": "Evidence-gated garment and avatar asset production lifecycle",
+      "capabilities": ["blender", "assets", "local_runtime"],
+      "canonical_for": ["avatar_garment_pipeline"]
+    }
+  ]
+}

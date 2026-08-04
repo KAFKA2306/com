@@ -1,0 +1,46 @@
+name: Decision
+description: Record a portfolio-level architectural or governance choice.
+title: "[Decision] "
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and decision driver
+      description: State the problem, constraints, and decision deadline.
+    validations:
+      required: true
+  - type: textarea
+    id: decision
+    attributes:
+      label: Proposed decision
+      description: State the exact rule, boundary, or architecture being adopted.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: List credible alternatives and why they were not selected.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and assumptions
+      description: Link current repository state and primary sources; identify assumptions.
+    validations:
+      required: true
+  - type: textarea
+    id: consequences
+    attributes:
+      label: Consequences
+      description: Record positive, negative, operational, security, and migration effects.
+    validations:
+      required: true
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation and review date
+      description: Link required directives and define when the decision should be revisited.
+    validations:
+      required: true

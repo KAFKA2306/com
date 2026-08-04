@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "portfolio": "KAFKA2306",
+  "command_repository": "KAFKA2306/com",
+  "primary_interaction_surface": "chatgpt",
+  "canonical_work_item_surface": "github_issues",
+  "default_timezone": "Asia/Tokyo",
+  "state_model": ["inbox", "ready", "running", "review", "blocked", "failed", "done", "cancelled"]
+}

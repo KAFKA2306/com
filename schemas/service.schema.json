@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/KAFKA2306/com/schemas/service.schema.json",
+  "title": "KAFKA COM recurring-service registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "services", "notes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "notes": {"type": "string"},
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "work_item", "purpose", "targets", "executor", "evidence_policy", "failure_policy", "status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "work_item": {"type": "string"},
+          "purpose": {"type": "string", "minLength": 10},
+          "targets": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": true},
+          "executor": {"enum": ["chatgpt", "github-actions", "local-runtime"]},
+          "evidence_policy": {"type": "string", "minLength": 5},
+          "failure_policy": {"type": "string", "minLength": 5},
+          "status": {"enum": ["proposed", "disabled", "active", "paused", "retired"]}
+        }
+      }
+    }
+  }
+}

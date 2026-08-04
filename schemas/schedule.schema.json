@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/KAFKA2306/com/schemas/schedule.schema.json",
+  "title": "KAFKA COM schedule registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "schedules", "notes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "notes": {"type": "string"},
+    "schedules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "service_id", "timezone", "trigger", "executor", "status"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "service_id": {"type": "string"},
+          "timezone": {"type": "string"},
+          "trigger": {"type": "string", "minLength": 3},
+          "executor": {"enum": ["chatgpt", "github-actions", "local-runtime"]},
+          "status": {"enum": ["disabled", "active", "paused", "retired"]}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+name: Recurring service
+description: Define a repeated or condition-based responsibility before scheduling it.
+title: "[Service] "
+body:
+  - type: input
+    id: service_id
+    attributes:
+      label: Service identifier
+      description: Lowercase slug used by the registry.
+      placeholder: morning-earnings-audit
+    validations:
+      required: true
+  - type: input
+    id: targets
+    attributes:
+      label: Target repositories
+      placeholder: KAFKA2306/investor
+    validations:
+      required: true
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose and user decision
+      description: Explain what repeated decision or obligation this service supports.
+    validations:
+      required: true
+  - type: textarea
+    id: trigger
+    attributes:
+      label: Cadence or condition
+      description: Include timezone, exact cadence, or condition and checking frequency.
+    validations:
+      required: true
+  - type: dropdown
+    id: executor
+    attributes:
+      label: Executor
+      options:
+        - chatgpt
+        - github-actions
+        - local-runtime
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources and freshness policy
+      description: Define primary sources, lookback window, and stale-data behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and normal result
+      description: Define what is recorded on successful runs and when no notification is appropriate.
+    validations:
+      required: true
+  - type: textarea
+    id: failure
+    attributes:
+      label: Failure handling
+      description: Define incident triggers, retry limits, escalation, and safe degradation.
+    validations:
+      required: true
+  - type: textarea
+    id: stop
+    attributes:
+      label: Pause and retirement conditions
+      description: Define when the service should stop or be reviewed.
+    validations:
+      required: true

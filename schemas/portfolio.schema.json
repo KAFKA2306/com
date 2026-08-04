@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/KAFKA2306/com/schemas/portfolio.schema.json",
+  "title": "KAFKA COM portfolio identity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "portfolio", "command_repository", "primary_interaction_surface", "canonical_work_item_surface", "default_timezone", "state_model"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "portfolio": {"const": "KAFKA2306"},
+    "command_repository": {"const": "KAFKA2306/com"},
+    "primary_interaction_surface": {"const": "chatgpt"},
+    "canonical_work_item_surface": {"const": "github_issues"},
+    "default_timezone": {"const": "Asia/Tokyo"},
+    "state_model": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "inbox"},
+        {"const": "ready"},
+        {"const": "running"},
+        {"const": "review"},
+        {"const": "blocked"},
+        {"const": "failed"},
+        {"const": "done"},
+        {"const": "cancelled"}
+      ],
+      "items": false
+    }
+  }
+}

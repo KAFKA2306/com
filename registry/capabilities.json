@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "executors": [
+    {
+      "id": "chatgpt",
+      "class": "orchestrator",
+      "capabilities": ["research", "connected_source_read", "issue_coordination", "pull_request_coordination", "review", "scheduled_tasks"],
+      "restrictions": ["no_unverified_completion", "no_secret_storage", "no_background_work_without_scheduled_task"]
+    },
+    {
+      "id": "github-actions",
+      "class": "repository_executor",
+      "capabilities": ["lint", "test", "build", "release", "lightweight_schedule"],
+      "restrictions": ["repository_scoped_permissions", "no_portfolio_truth"]
+    },
+    {
+      "id": "local-runtime",
+      "class": "machine_executor",
+      "capabilities": ["gpu", "desktop_applications", "private_local_files", "machine_integration"],
+      "restrictions": ["runtime_state_not_canonical", "redact_logs", "least_privilege"]
+    }
+  ]
+}

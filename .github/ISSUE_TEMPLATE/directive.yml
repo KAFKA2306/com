@@ -1,0 +1,81 @@
+name: Directive
+description: Define a bounded portfolio or repository change with explicit evidence gates.
+title: "[Directive] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for material changes, investigations, migrations, and cross-repository work.
+  - type: input
+    id: targets
+    attributes:
+      label: Target repositories
+      description: Comma-separated owner/repository identifiers.
+      placeholder: KAFKA2306/investor
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal and decision context
+      description: State the user outcome and why the work is needed.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: In scope
+      description: List the changes and investigations included.
+    validations:
+      required: true
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: Out of scope
+      description: State adjacent work that must not be silently included.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use independently verifiable checkboxes.
+      placeholder: "- [ ] Tests pass\n- [ ] Pull request merged\n- [ ] Runtime verified"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Required evidence
+      description: Identify primary sources, repository references, tests, deployments, screenshots, or runtime observations required for closure.
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Highest permitted risk
+      options:
+        - Read-only
+        - Repository write
+        - Publish or deploy
+        - Destructive action explicitly authorized below
+    validations:
+      required: true
+  - type: textarea
+    id: restrictions
+    attributes:
+      label: Restrictions and authorization
+      description: State prohibited actions and quote any explicit destructive authorization.
+    validations:
+      required: true
+  - type: dropdown
+    id: timing
+    attributes:
+      label: Timing
+      options:
+        - Execute now
+        - Night or weekend eligible
+        - Scheduled date or cadence
+        - Condition-based monitoring
+    validations:
+      required: true

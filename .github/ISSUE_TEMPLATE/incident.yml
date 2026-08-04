@@ -1,0 +1,61 @@
+name: Incident
+description: Record an incorrect result, failed execution, broken deployment, or control failure.
+title: "[Incident] "
+body:
+  - type: input
+    id: affected
+    attributes:
+      label: Affected repositories or services
+      placeholder: KAFKA2306/investor, morning-earnings-audit
+    validations:
+      required: true
+  - type: input
+    id: detected
+    attributes:
+      label: Detection time
+      description: Use an absolute timestamp with timezone.
+      placeholder: 2026-08-04T18:30+09:00
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Observed impact
+      description: State what was wrong or unavailable without speculation.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link exact runs, commits, pages, responses, or redacted logs.
+    validations:
+      required: true
+  - type: textarea
+    id: containment
+    attributes:
+      label: Containment
+      description: State completed and pending actions that prevent further harm.
+    validations:
+      required: true
+  - type: textarea
+    id: cause
+    attributes:
+      label: Confirmed cause and contributing factors
+      description: Separate confirmed facts from hypotheses.
+    validations:
+      required: true
+  - type: textarea
+    id: recovery
+    attributes:
+      label: Recovery and verification
+      description: Define repair, rollback, and evidence required to close the incident.
+    validations:
+      required: true
+  - type: textarea
+    id: prevention
+    attributes:
+      label: Prevention changes
+      description: Link resulting directives or target-repository work.
+    validations:
+      required: true

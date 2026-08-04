@@ -36,6 +36,16 @@ This repository is the portfolio command repository. Apply these rules to ChatGP
 - A deployed page URL is not evidence that its data is correct.
 - Preserve exact dates, versions, numbers, and commit identifiers.
 
+## Image retention rules
+
+- Treat user-requested images, adopted design assets, published images, comparison images, and render/review evidence as durable assets.
+- Classify image assets as `KEEP`, `ARCHIVE`, or `DISCARD`. `KEEP` and `ARCHIVE` assets must not be deleted, overwritten, or silently replaced.
+- When a new image supersedes an older image, preserve the older image at a stable repository path and record the relationship in a manifest or work item. Git history alone is not an acceptable archive.
+- Never remove an image merely because it is unused by the current page, pipeline, or build.
+- Deletion is permitted only for an asset explicitly classified as `DISCARD`, with the exact path and reason recorded, and with the user's explicit approval when the image was requested, selected, published, or used as evidence.
+- Preserve original-resolution files when available. Derivative WebP, thumbnail, cropped, compressed, or annotated variants do not replace the original.
+- Follow `docs/image-retention-policy.md` for repository-level implementation.
+
 ## Permission boundary
 
 Permitted by default when required by the user's instruction:

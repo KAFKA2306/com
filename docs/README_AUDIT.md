@@ -6,9 +6,9 @@
 
 > **監査基準日:** 2026年8月5日  
 > **GitHub接続で確認したownerリポジトリ数:** 100  
-> **初回確認済み:** 40  
-> **未確認または再監査待ち:** 60  
-> **README更新・merge済み:** 18  
+> **初回確認済み:** 45  
+> **未確認または再監査待ち:** 55  
+> **README更新・merge済み:** 23  
 > **初回確認で全面改稿を保留:** 21  
 > **snapshot・fork再監査:** 1
 
@@ -48,6 +48,11 @@
 | `KAFKA2306/333` | merged | PR #3 / `5602ecf04a3c44a785a15870227dd992f7411fa9` | raw data不在時の固定投資結論を除去し、未計算Pages、README契約test、CI整合を追加 |
 | `KAFKA2306/finBI` | merged | PR #3 / `62cc10c04c6fbe305d7b0de05d2819d12dfeeb0f` | 起動可能に見えた金融BIを、設定不整合・絶対path・旧依存を持つ非稼働legacy prototypeとして訂正 |
 | `KAFKA2306/salary` | merged | PR #2 / `8334ffec63e685e10d719ced6db4261ca5299e73` | 継続収集projectではなく、2024年2月のNotebook・CSV・third-party scraping snapshotとして訂正 |
+| `KAFKA2306/kafin2` | merged | PR #2 / `35fce97d3607f0ff1946004c5a34cbb343e7e6d7` | READMEだけの2024年構想であり、code・data・test・workflow・deploymentが存在しないことを明示 |
+| `KAFKA2306/kafin3` | merged | PR #4 / `5d1e8348f32fc316cd0e2dba13af6d00660fe492` | 英語READMEを日本語化し、旧Completion API・欠落frontend・setup不整合を持つlegacy prototypeとして訂正 |
+| `KAFKA2306/uranium` | merged | PR #2 / `83c64f08a77a656815ae24a7c8c8031d70fe33ce` | READMEを新設し、2024年10月の原子力関連ticker・価格取得snapshotとして出典・identity・鮮度・再現性の制約を説明 |
+| `KAFKA2306/financeLLM` | merged | PR #2 / `926e7cad8763f7f180ddec82db17ae86873970a4` | invalid requirementsと固定pathを持つ再現不能なlegacy RAG実験として訂正 |
+| `KAFKA2306/nonfarmpayroll` | merged | PR #2 / `6d1730031f24b7b5757a23f48fd7e86e25718da7` | synthetic改定統計を撤回し、READMEとPages workflowをanalysis unavailableのfail-closed契約へ変更 |
 
 ## 作業中・障害・訂正履歴
 
@@ -58,6 +63,11 @@
 | `KAFKA2306/333` | incident-resolved | Issue #2 closed / PR #3 | 固定投資結論を除去。Ruff、Black、mypy、pytestがActions run `30924897374`で成功 |
 | `KAFKA2306/finBI` | incident-resolved | Issue #2 closed / PR #3 | 存在しないsetup、未定義設定、個人pathを実装済みと読める状態を訂正 |
 | `KAFKA2306/salary` | incident-resolved | Issue #1 closed / PR #2 | snapshotを現在の給与data pipelineと読める状態を訂正 |
+| `KAFKA2306/kafin2` | incident-resolved | Issue #1 closed / PR #2 | README-only構想を稼働中AI金融serviceと読める状態を訂正 |
+| `KAFKA2306/kafin3` | incident-resolved | Issue #3 closed / PR #4 | 廃止API・欠落frontend・誤setupを持つlegacy prototypeの状態を明示 |
+| `KAFKA2306/uranium` | incident-resolved | Issue #1 closed / PR #2 | README欠落を解消し、2024年snapshotの境界を記録 |
+| `KAFKA2306/financeLLM` | incident-resolved | Issue #1 closed / PR #2 | 再現不能なquick startと未検証のRAG性能表現を訂正 |
+| `KAFKA2306/nonfarmpayroll` | incident | Issue #1 open / PR #2 merged | synthetic・demo・placeholder改定dataの数値主張を撤回。status-only Pagesの公開置換確認と、実vintage復旧が残る |
 
 ### `vrc_cast_event_calender`誤判定の訂正証拠
 
@@ -81,6 +91,18 @@ PR #3ではREADMEだけでなく、生成template、Pages、workflow、契約tes
 - mypy: success
 - pytest: success
 - merge commit: `5602ecf04a3c44a785a15870227dd992f7411fa9`
+
+### `nonfarmpayroll`のIncident証拠
+
+監査では、FRED PAYEMSだけを取得するworkflowに対し、BLS初回・第2回・第3回公表値の正準入力が存在しないことを確認しました。
+
+- `data_processed/bls_releases.csv`・parquet: default branchで確認できない
+- `scripts/03_merge_revisions.py`: BLS入力不在時に`release1 = final`を作るplaceholder経路あり
+- `dashboard.js`: 読込失敗時に`Math.random()`でdemo revisionを生成
+- `summary_report.json`: demo fallbackと一致する固定指標を保持
+- `nfp_revisions.csv`: 1939年から小数を含む人工的なrelease値を保持
+
+PR #2で未検証指標を撤回し、Pages artifactをstatus-onlyに変更しました。公開URLが新しいstatusへ置き換わったことを確認できるまではIssue #1をcloseしません。
 
 ## 初回確認で全面改稿を保留したリポジトリ
 
@@ -124,7 +146,7 @@ PR #3ではREADMEだけでなく、生成template、Pages、workflow、契約tes
 6. fork、source snapshot、upstream mirror
 7. 停止中・archive候補・小規模実験
 
-次の監査batchでは、未確認60件から金融・公開site・README-only・重複候補を先に抽出し、実体とREADMEの不一致が大きいものから個別Issue・PRへ分離します。
+次の監査batchでは、未確認55件から金融・公開site・README-only・重複候補を先に抽出します。`nonfarmpayroll`は公開Pagesのstatus置換を継続確認します。
 
 ## 監査手順
 

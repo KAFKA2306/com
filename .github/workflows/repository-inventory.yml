@@ -1,0 +1,57 @@
+name: Audit repository inventory
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "37 3 * * 1"
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+      - name: Require portfolio-scoped read token
+        env:
+          KAFKA_GITHUB_TOKEN: ${{ secrets.KAFKA_GITHUB_TOKEN }}
+        run: |
+          test -n "$KAFKA_GITHUB_TOKEN" || {
+            echo "KAFKA_GITHUB_TOKEN is required for a complete owner inventory; refusing partial success" >&2
+            exit 2
+          }
+      - name: Audit GitHub repository inventory
+        env:
+          KAFKA_GITHUB_TOKEN: ${{ secrets.KAFKA_GITHUB_TOKEN }}
+        run: python scripts/audit_repository_inventory.py
+      - name: Reject private snapshot from public artifact set
+        run: |
+          test -f repository-inventory-audit/snapshot.private.json
+          test -f repository-inventory-audit/candidate.public.json
+          test -f repository-inventory-audit/report.public.md
+          ! grep -R 'snapshot.private.json' .github/workflows/repository-inventory.yml | grep upload
+      - name: Upload public-safe audit result
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-inventory-public
+          path: |
+            repository-inventory-audit/candidate.public.json
+            repository-inventory-audit/report.public.md
+          if-no-files-found: error
+          retention-days: 14
+      - name: Remove private runtime snapshot
+        if: always()
+        run: rm -rf repository-inventory-audit
+      - name: Verify checkout is clean
+        if: always()
+        run: test -z "$(git status --porcelain)"

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "repositories": [
+    {
+      "repository_id": 1157588149,
+      "expected_full_name": "KAFKA2306/com",
+      "disposition": "managed",
+      "reason": "registry/repositories.json の既存管理対象。横断control planeの正準。",
+      "reviewed_at": "2026-08-10",
+      "review_due_at": "2026-11-10",
+      "expected_visibility": "public",
+      "expected_archived": false,
+      "expected_capabilities": {
+        "issues": true,
+        "pages": true,
+        "pull_requests": true
+      }
+    },
+    {
+      "repository_id": 1171620233,
+      "expected_full_name": "KAFKA2306/agent-resources",
+      "disposition": "managed",
+      "reason": "registry/repositories.json の既存管理対象。agent skill配布の正準。",
+      "reviewed_at": "2026-08-10",
+      "review_due_at": "2026-11-10",
+      "expected_visibility": "public",
+      "expected_archived": false,
+      "expected_capabilities": {
+        "issues": false,
+        "pages": true,
+        "pull_requests": true
+      }
+    },
+    {
+      "repository_id": 1226067667,
+      "expected_full_name": "KAFKA2306/prompt-vault",
+      "disposition": "managed",
+      "reason": "registry/repositories.json の既存管理対象。prompt productの正準。",
+      "reviewed_at": "2026-08-10",
+      "review_due_at": "2026-11-10",
+      "expected_visibility": "public",
+      "expected_archived": false,
+      "expected_capabilities": {
+        "issues": true,
+        "pages": true,
+        "pull_requests": true
+      }
+    },
+    {
+      "repository_id": 1163893460,
+      "expected_full_name": "KAFKA2306/investor",
+      "disposition": "managed",
+      "reason": "registry/repositories.json の既存管理対象。investment researchの正準。",
+      "reviewed_at": "2026-08-10",
+      "review_due_at": "2026-11-10",
+      "expected_visibility": "public",
+      "expected_archived": false
+    },
+    {
+      "repository_id": 1085626982,
+      "expected_full_name": "KAFKA2306/CrewTrade",
+      "disposition": "managed",
+      "reason": "registry/repositories.json の既存管理対象。trade research catalogueの正準。",
+      "reviewed_at": "2026-08-10",
+      "review_due_at": "2026-11-10",
+      "expected_visibility": "public",
+      "expected_archived": false
+    },
+    {
+      "repository_id": 1122813966,
+      "expected_full_name": "KAFKA2306/WealthAudit",
+      "disposition": "managed",
+      "reason": "registry/repositories.json の既存管理対象。wealth auditの正準。",
+      "reviewed_at": "2026-08-10",
+      "review_due_at": "2026-11-10",
+      "expected_visibility": "public",
+      "expected_archived": false
+    },
+    {
+      "repository_id": 1314801006,
+      "expected_full_name": "KAFKA2306/image2outfit",
+      "disposition": "managed",
+      "reason": "registry/repositories.json の既存管理対象。avatar garment pipelineの正準。",
+      "reviewed_at": "2026-08-10",
+      "review_due_at": "2026-11-10",
+      "expected_visibility": "public",
+      "expected_archived": false
+    }
+  ]
+}

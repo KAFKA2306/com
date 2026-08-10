@@ -19,6 +19,17 @@ This repository is the portfolio command repository. Apply these rules to ChatGP
 6. Record exact repository, issue, pull request, commit, workflow, deployment, and primary-source references.
 7. Mark work complete only when every acceptance criterion is demonstrably satisfied.
 
+## GitHub write-path portability
+
+- `gh` is optional tooling, never a required execution dependency.
+- Missing or unavailable `gh` must not be treated as a blocker when an authenticated GitHub connector or GitHub REST/GraphQL API path is available.
+- For repository writes, prefer the connected GitHub capability when available. Otherwise use an authenticated GitHub API client. Use `gh` only as a convenience wrapper when it is already available.
+- A missing CLI must not cause implementation work to be downgraded into placeholder Issues, documentation-only work items, or manual instructions when the requested branch, commit, pull request, issue, label, merge, or cleanup operation can be performed through the connector or API.
+- Cross-repository or bulk changes must use the same transport-independent sequence: resolve repository and default branch, create an intentional branch, write the change, create the pull request, validate, merge when authorized and gates pass, then remove or otherwise clean up transient work state when supported.
+- Repository automation that publishes GitHub Issues or Pull Requests must not silently skip publication merely because `gh` is absent. Implement an authenticated API fallback and fail explicitly only when no authorized GitHub write transport is available.
+- Do not add `gh` installation as a product/runtime prerequisite solely to perform GitHub API operations that can be completed through HTTPS APIs.
+- Record the actual transport used and the resulting GitHub URLs or identifiers as evidence. Completion is based on GitHub state, not on CLI availability.
+
 ## ChatGPT-first behavior
 
 - ChatGPT is the normal interaction and orchestration surface.

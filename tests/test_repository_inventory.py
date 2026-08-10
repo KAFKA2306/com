@@ -88,6 +88,11 @@ class InventoryTests(unittest.TestCase):
         )
 
     def test_missing_known_private_name_is_redacted(self):
+        private_registry = {
+            "repositories": [
+                {"id": "KAFKA2306/private-known", "role": "observed", "canonical_for": []}
+            ]
+        }
         private_decisions = {
             "repositories": [
                 dict(
@@ -97,7 +102,7 @@ class InventoryTests(unittest.TestCase):
                 )
             ]
         }
-        diffs = inv.classify(self.registry, private_decisions, [])
+        diffs = inv.classify(private_registry, private_decisions, [])
         public = inv.publicize(diffs, [], private_decisions)
         encoded = json.dumps(public)
         self.assertNotIn("private-known", encoded)

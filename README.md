@@ -4,7 +4,7 @@
 
 日常の入口はChatGPTです。ユーザーは自然言語で目的や変更を伝えます。重要な仕事は、会話だけに残さず、このリポジトリのIssueへ「何をするか」「どこまで許可するか」「何をもって完了とするか」「どの証拠で確認したか」を記録します。
 
-> **最終実体確認:** 2026年8月4日  
+> **最終実体確認:** 2026年8月10日  
 > **標準タイムゾーン:** Asia/Tokyo  
 > **正準の管理対象:** 方針、横断指示、意思決定、定期サービス、障害、完了証拠  
 > **正準ではないもの:** ChatGPTの会話履歴、ローカルキュー、スケジューラーの内部状態、各製品の実装コード
@@ -180,6 +180,25 @@ PRを作っただけ、CIが通っただけ、設定ファイルを書いただ�
 
 未登録リポジトリを操作してはいけないという意味ではありません。横断管理上の正準として扱う前に、目的、公開範囲、重複関係を確認するという意味です。
 
+### GitHub実体の棚卸し
+
+正準7件は手動レビューされた役割台帳として維持し、GitHub APIの取得結果から `role` / `canonical_for` を自動変更しません。実体との差分は別契約で監査します。
+
+```bash
+KAFKA_GITHUB_TOKEN=... python scripts/audit_repository_inventory.py
+python scripts/validate_control_plane.py
+python -m unittest discover -s tests -v
+```
+
+- stableなGitHub repository IDと判断履歴は `registry/repository-inventory-decisions.json` に保持します。
+- 差分は `new | missing | renamed | visibility_changed | archived_changed | capability_changed | unclassified` に分類します。
+- 未登録repositoryは `managed | observed | excluded | pending_review` のいずれかを人間が判断し、理由・確認日・再確認期限を記録します。
+- `repository-inventory-audit/snapshot.private.json` はprivate repositoryを含み得る実行時snapshotなので、Gitへcommitせず公開artifactにもuploadしません。
+- 公開artifactへ出せるのはprivate名を除去した `candidate.public.json` と `report.public.md` だけです。
+- API認証失敗、rate limit、取得不能は「差分なし」ではなくaudit failureです。
+
+定期・手動のlive auditは `.github/workflows/repository-inventory.yml` で分離します。完全なowner inventoryを読める `KAFKA_GITHUB_TOKEN` がない場合はfail-closedします。差分確認後の判断責任と更新手順は [`docs/repository-inventory.md`](docs/repository-inventory.md) に記載しています。
+
 ---
 
 ## ディレクトリ構成
@@ -226,6 +245,7 @@ python -m unittest discover -s tests -v
 - 正準責務の重複
 - 未登録executor参照
 - serviceとscheduleの参照関係
+- repository inventory差分分類とprivate情報の公開境界
 - 必須ポリシーとIssue Formの存在
 
 GitHub Actionsでも同じ検証を実行します。
@@ -290,6 +310,7 @@ GitHub Actionsでも同じ検証を実行します。
 - ローカル絶対パスを含む実行履歴
 - 秘密を含むprompt
 - 未加工のexecutorログ
+- private repositoryの名称や存在を示す公開artifact
 
 必要な場合は、秘密を含まない要約、hash、GitHub上の限定公開参照などを記録します。
 
@@ -299,7 +320,7 @@ GitHub Actionsでも同じ検証を実行します。
 
 ## 既知の制約
 
-- `registry/repositories.json`は現在、主要リポジトリの初期登録であり、KAFKA2306所有リポジトリの全件監査は継続中です。
+- `registry/repositories.json`は承認済み主要リポジトリの正準役割台帳であり、全所有リポジトリを自動的に正準化しません。全件実体との差分はrepository inventory auditで検出し、人間が分類します。
 - 定期サービスとscheduleは、実稼働監査を終えたものだけを登録する方針です。
 - GitHub接続や実行環境によっては、branch削除、ローカルGPU実行、外部サービスの管理操作を直接行えない場合があります。
 - このリポジトリは製品ダッシュボードではありません。公開UIが必要な場合も、管理契約と可視化を分離します。
@@ -315,6 +336,7 @@ GitHub Actionsでも同じ検証を実行します。
 - [`policies/evidence.md`](policies/evidence.md) — 証拠条件
 - [`policies/source-verification.md`](policies/source-verification.md) — 外部情報の検証
 - [`policies/repository-boundaries.md`](policies/repository-boundaries.md) — リポジトリ境界
+- [`docs/repository-inventory.md`](docs/repository-inventory.md) — GitHub実体棚卸し
 - [`docs/CONTROL_MODEL.md`](docs/CONTROL_MODEL.md) — 管理モデル
 - [`docs/WORK_ITEM_CONTRACT.md`](docs/WORK_ITEM_CONTRACT.md) — 作業項目の契約
 

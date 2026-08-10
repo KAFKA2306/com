@@ -5,6 +5,7 @@ __pycache__/
 .venv/
 state/
 logs/
+repository-inventory-audit/
 *.pid
 *.lock
 *.sqlite*

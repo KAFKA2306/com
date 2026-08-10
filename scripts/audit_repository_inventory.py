@@ -108,6 +108,11 @@ def load_json(path: Path) -> Any:
         return json.load(handle)
 
 
+def _review_due_at(retrieved_at: str) -> str:
+    parsed = dt.datetime.fromisoformat(retrieved_at.replace("Z", "+00:00"))
+    return (parsed.date() + dt.timedelta(days=30)).isoformat()
+
+
 def classify(registry: dict[str, Any], decisions: dict[str, Any], live: list[dict[str, Any]]) -> list[dict[str, Any]]:
     canonical_names = {entry["id"] for entry in registry["repositories"]}
     decision_by_id = {int(e["repository_id"]): e for e in decisions["repositories"]}
@@ -160,12 +165,16 @@ def classify(registry: dict[str, Any], decisions: dict[str, Any], live: list[dic
     decided_ids = set(decision_by_id)
     for current in live:
         if current["repository_id"] not in decided_ids:
+            checked_at = current["retrieved_at"]
             diffs.append(
                 {
                     "type": "new" if current["full_name"] not in canonical_names else "unclassified",
                     "repository_id": current["repository_id"],
                     "full_name": current["full_name"],
                     "disposition": "pending_review",
+                    "reason": "GitHub APIで検出された未登録repository。人間レビュー待ち。",
+                    "checked_at": checked_at,
+                    "review_due_at": _review_due_at(checked_at),
                 }
             )
 
@@ -203,13 +212,24 @@ def validate_decisions(data: dict[str, Any]) -> None:
                 raise AuditError(f"missing {key} for repository_id {rid}")
 
 
-def publicize(diffs: list[dict[str, Any]], live: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    visibility = {r["repository_id"]: r["visibility"] for r in live}
+def publicize(
+    diffs: list[dict[str, Any]], live: list[dict[str, Any]], decisions: dict[str, Any]
+) -> list[dict[str, Any]]:
+    live_visibility = {int(r["repository_id"]): r["visibility"] for r in live}
+    expected_visibility = {
+        int(entry["repository_id"]): entry.get("expected_visibility")
+        for entry in decisions.get("repositories", [])
+    }
+    private_ids = {
+        rid
+        for rid in set(live_visibility) | set(expected_visibility)
+        if live_visibility.get(rid) == "private" or expected_visibility.get(rid) == "private"
+    }
     safe: list[dict[str, Any]] = []
     private_count = 0
     for item in diffs:
         rid = item.get("repository_id")
-        if rid is not None and visibility.get(rid) == "private":
+        if rid is not None and int(rid) in private_ids:
             private_count += 1
             continue
         safe.append(item)
@@ -278,7 +298,7 @@ def main(argv: list[str] | None = None) -> int:
         token = os.environ.get("KAFKA_GITHUB_TOKEN") or os.environ.get("GITHUB_TOKEN", "")
         live = GitHubClient(token).list_owned(args.owner, retrieved_at)
     diffs = classify(registry, decisions, live)
-    safe_diffs = publicize(diffs, live)
+    safe_diffs = publicize(diffs, live, decisions)
     out = Path(args.output_dir)
     snapshot = {
         "schema_version": 1,

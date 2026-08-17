@@ -1,5 +1,8 @@
 # KAFKA COM
 
+[![Validate control plane](https://github.com/KAFKA2306/com/actions/workflows/validate-control-plane.yml/badge.svg)](https://github.com/KAFKA2306/com/actions/workflows/validate-control-plane.yml)
+[![Audit repository inventory](https://github.com/KAFKA2306/com/actions/workflows/repository-inventory.yml/badge.svg)](https://github.com/KAFKA2306/com/actions/workflows/repository-inventory.yml)
+
 `KAFKA2306/com`は、KAFKA2306配下の複数リポジトリにまたがる仕事を、**人間が理解でき、ChatGPTが実行を支援でき、GitHub上で監査できる形に保つための管理リポジトリ**です。
 
 日常の入口はChatGPTです。ユーザーは自然言語で目的や変更を伝えます。重要な仕事は、会話だけに残さず、このリポジトリのIssueへ「何をするか」「どこまで許可するか」「何をもって完了とするか」「どの証拠で確認したか」を記録します。
@@ -117,7 +120,6 @@ GitHub Actions、ChatGPTのscheduled task、ローカルWSL、GPU実行環境な
 誤った分析、壊れた公開ページ、失敗した定期処理、古い情報の混入、権限境界の逸脱などを記録します。
 
 推測と確定原因を分離し、復旧証拠と再発防止を残します。
-
 ### Decision
 
 リポジトリ境界、技術選定、公開方針、正準データ、完了条件など、今後の仕事に影響する判断を記録します。
@@ -237,7 +239,6 @@ Python 3.12を推奨します。追加パッケージは不要です。
 python scripts/validate_control_plane.py
 python -m unittest discover -s tests -v
 ```
-
 検証対象:
 
 - registryとschemaの整合

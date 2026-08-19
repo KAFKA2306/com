@@ -4,10 +4,3 @@ version = "0.1.0"
 description = "Deterministic validation for the KAFKA COM command repository"
 requires-python = ">=3.12"
 dependencies = []
-
-[tool.ruff]
-line-length = 120
-target-version = "py312"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]

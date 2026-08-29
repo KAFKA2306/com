@@ -19,6 +19,48 @@ This repository is the portfolio command repository. Apply these rules to ChatGP
 6. Record exact repository, issue, pull request, commit, workflow, deployment, and primary-source references.
 7. Mark work complete only when every acceptance criterion is demonstrably satisfied.
 
+## Small-context execution contract
+
+Design executable work so an agent with limited context can finish one unit without reading the chat history, a long parent Issue, or unrelated repository history.
+
+### Execution packet
+
+Every executable Issue should contain only the smallest sufficient packet:
+
+1. **Goal** — one observable outcome.
+2. **Current truth** — current repository/production state, preferably with exact paths, revisions, or direct evidence.
+3. **Next action** — exactly one bounded implementation or verification action.
+4. **Allowed scope** — files/surfaces the agent may change; state important non-goals only when needed to prevent a wrong change.
+5. **Inputs** — exact file paths, commands, URLs, IDs, or direct predecessor Issue needed for this unit.
+6. **Done** — a short checklist of observable completion criteria.
+7. **Verify** — canonical tests/CI/runtime/read-back required before completion.
+8. **Block/stop** — conditions that require `BLOCKED`/`UNVERIFIED` instead of guessing, fallback, broadening scope, or retrying indefinitely.
+
+### Size and dependency rules
+
+- One agent run handles one executable Issue and one primary outcome.
+- Target an executable Issue body of about **3,500 characters or less** and **7 acceptance checks or fewer**. If preserving correctness, safety, or evidence needs more, split the work instead of deleting constraints.
+- A child Issue must be executable without reading its parent body. Parent trackers contain only purpose, current state, dependency graph, and child completion state.
+- List only direct dependencies. Do not require an agent to recursively read an Issue tree.
+- Historical investigation, superseded plans, long logs, and large evidence dumps belong in comments or linked artifacts. Keep the Issue body as the current handoff packet.
+- When state changes materially, rewrite the Issue body to the current truth instead of appending another historical section.
+- Re-read current code, CI, deployment, or external state before acting. Stale Issue prose never overrides current observable state.
+- If two tasks can fail independently or require different tools/environments, they are separate executable Issues.
+- If an external setting or human-only action blocks execution, reduce the Issue to that exact blocker and its read-back test; do not retain already-completed implementation steps as open scope.
+
+### Continuation record
+
+At the end of a run, persist only what the next small-context agent needs:
+
+- result: `DONE | BLOCKED | UNVERIFIED`;
+- exact revision/state observed;
+- files or external state changed;
+- validation/read-back result;
+- first unresolved blocker, if any;
+- next executable Issue or one next action.
+
+Do not use hidden model memory, prior conversation context, or an ever-growing parent Issue as continuation state.
+
 ## GitHub write-path portability
 
 - `gh` is optional tooling, never a required execution dependency.

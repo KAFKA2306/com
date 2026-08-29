@@ -19,6 +19,19 @@ This repository is the portfolio command repository. Apply these rules to ChatGP
 6. Record exact repository, issue, pull request, commit, workflow, deployment, and primary-source references.
 7. Mark work complete only when every acceptance criterion is demonstrably satisfied.
 
+## Small-context execution
+
+- One executable Issue = one observable outcome; one agent run = one executable Issue.
+- An executable Issue must be self-contained. Never require chat history, a parent Issue body, or recursive Issue-tree reading.
+- Use this minimal packet: **Goal / Current truth / Next action / Allowed scope / Inputs / Done / Verify / Stop**.
+- Target about **3,500 characters or less** and **7 acceptance checks or fewer**. If correctness or safety needs more, split the work instead of deleting constraints.
+- Parent trackers contain only purpose, current state, direct dependency graph, and child completion state. Children repeat the exact inputs they need.
+- Keep only direct dependencies. If two steps can fail independently or need different tools/environments, make them separate executable Issues.
+- Keep the body current: rewrite stale state; move history, long logs, superseded plans, and large evidence to comments or linked artifacts.
+- Read current code/CI/deployment/external state before acting. Current observable state overrides stale Issue prose.
+- External or human-only blockers reduce the Issue to that blocker plus its read-back test; do not keep completed implementation as open scope.
+- Finish with `DONE | BLOCKED | UNVERIFIED`, exact revision/state, changed surface, validation/read-back, first blocker, and one next action. Never rely on hidden model memory for continuation.
+
 ## GitHub write-path portability
 
 - `gh` is optional tooling, never a required execution dependency.

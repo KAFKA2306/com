@@ -1,0 +1,6 @@
+{
+  "contract": "declared requirements + observations -> canonical evidence gate manifest",
+  "missingObservation": "UNVERIFIED",
+  "unknownObservation": "ERROR",
+  "duplicateObservation": "ERROR"
+}

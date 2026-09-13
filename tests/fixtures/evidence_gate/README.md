@@ -1,0 +1,1 @@
+Evidence-gate fixtures cover direct gate evaluation and producer normalization. `source-pass.json` contains complete observations; `source-missing.json` intentionally omits required observations so the producer must emit `UNVERIFIED` entries rather than treating absence as success.

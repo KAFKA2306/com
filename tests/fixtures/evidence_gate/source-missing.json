@@ -1,0 +1,8 @@
+{
+  "repository": "KAFKA2306/com",
+  "revision": "2222222222222222222222222222222222222222",
+  "checks": [{"id": "unit-tests", "required": true}],
+  "observations": [],
+  "acceptance_criteria": [{"id": "artifact-complete"}],
+  "criterion_observations": []
+}

@@ -1,0 +1,25 @@
+{
+  "repository": "KAFKA2306/com",
+  "revision": "1111111111111111111111111111111111111111",
+  "checks": [
+    {"id": "unit-tests", "required": true},
+    {"id": "docs", "required": false}
+  ],
+  "observations": [
+    {
+      "id": "unit-tests",
+      "status": "PASS",
+      "evidence": [{"url": "https://github.com/KAFKA2306/com/actions/runs/1"}]
+    }
+  ],
+  "acceptance_criteria": [
+    {"id": "exact-revision"}
+  ],
+  "criterion_observations": [
+    {
+      "id": "exact-revision",
+      "status": "PASS",
+      "evidence": [{"path": "evidence/revision.txt"}]
+    }
+  ]
+}

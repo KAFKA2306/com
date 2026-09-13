@@ -1,0 +1,6 @@
+{
+  "repository": "KAFKA2306/com",
+  "revision": "4444444444444444444444444444444444444444",
+  "checks": [{"id": "runtime", "required": true}],
+  "observations": [{"id": "runtime", "status": "UNVERIFIED", "evidence": []}]
+}

@@ -32,5 +32,7 @@ jobs:
         run: python scripts/validate_control_plane.py
       - name: Run unit tests
         run: python -m unittest discover -s tests -v
+      - name: Validate evidence gate fixture
+        run: python scripts/validate_evidence_gate.py tests/fixtures/evidence_gate/pass.json
       - name: Verify checkout is clean
         run: test -z "$(git status --porcelain)"

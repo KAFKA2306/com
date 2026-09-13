@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "repository": "KAFKA2306/com",
+  "revision": "e42cc5cd32cdff8ace3402a719be0862dcca62c0",
+  "checks": [
+    {
+      "id": "control-plane-tests",
+      "required": true,
+      "status": "PASS",
+      "evidence": [
+        {
+          "path": "tests/test_validate_evidence_gate.py"
+        }
+      ]
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "manifest-is-machine-readable",
+      "status": "PASS",
+      "evidence": [
+        {
+          "path": "schemas/evidence-gate.schema.json"
+        }
+      ]
+    }
+  ]
+}

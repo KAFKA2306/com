@@ -1,0 +1,12 @@
+{
+  "repository": "KAFKA2306/com",
+  "revision": "3333333333333333333333333333333333333333",
+  "checks": [{"id": "unit-tests", "required": true}],
+  "observations": [
+    {
+      "id": "unit-tests",
+      "status": "FAIL",
+      "evidence": [{"url": "https://github.com/KAFKA2306/com/actions/runs/3"}]
+    }
+  ]
+}

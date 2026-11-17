@@ -11,7 +11,7 @@ This repository is the portfolio command repository. Apply these rules to ChatGP
 
 ## Default workflow
 
-着手前に [Kafstylerの作業規約](https://github.com/KAFKA2306/kafstyler/blob/main/AGENTS.md#全作業への適用と自己改善) を適用する。正本の `main` のSHAを確定し、その版の `AGENTS.md`、`skills/scope/SKILL.md` と今回必要なスキルを読む。利用者が実際に使う入口と合格条件を決め、対象側の規約と認可済みの道具で実行する。既存の作業記録に適用SHAと実行したスキルを残す。対象に固有の不足は対象で直し、共通手順の不足はKafstylerの保守担当が読める非公開の記録へつなぐ。
+着手前に [Kafstylerの作業規約](https://github.com/KAFKA2306/kafstyler/blob/main/AGENTS.md#全作業への適用と自己改善) を適用する。正本の `main` のSHAを確定し、その版の `AGENTS.md` を読む。同ファイルの機能一覧から目標設定と必要なスキルを選び、同じSHAのリンク先を読む。利用者が実際に使う入口と合格条件を決め、対象側の規約と認可済みの道具で実行する。既存の作業記録に適用SHAと実行したスキルを残す。対象に固有の不足は対象で直し、共通手順の不足はKafstylerの保守担当が読める非公開の記録へつなぐ。
 
 1. Resolve the target repository and current public or connected-source state.
 2. Classify the work as a directive, recurring service, incident, or decision.

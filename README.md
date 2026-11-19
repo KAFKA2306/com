@@ -188,9 +188,9 @@ PRを作っただけ、CIが通っただけ、設定ファイルを書いただ�
 
 ```bash
 KAFKA_GITHUB_TOKEN=... python scripts/audit_repository_inventory.py
-python scripts/validate_control_plane.py
-python -m unittest discover -s tests -v
 ```
+
+棚卸し手順の変更は、[ローカル検証](#ローカル検証)で確認できます。
 
 - stableなGitHub repository IDと判断履歴は `registry/repository-inventory-decisions.json` に保持します。
 - 差分は `new | missing | renamed | visibility_changed | archived_changed | capability_changed | unclassified` に分類します。
@@ -338,8 +338,6 @@ GitHub Actionsでも同じ検証を実行します。
 - [`policies/source-verification.md`](policies/source-verification.md) — 外部情報の検証
 - [`policies/repository-boundaries.md`](policies/repository-boundaries.md) — リポジトリ境界
 - [`docs/repository-inventory.md`](docs/repository-inventory.md) — GitHub実体棚卸し
-- [`docs/CONTROL_MODEL.md`](docs/CONTROL_MODEL.md) — 管理モデル
-- [`docs/WORK_ITEM_CONTRACT.md`](docs/WORK_ITEM_CONTRACT.md) — 作業項目の契約
 
 ---
 
